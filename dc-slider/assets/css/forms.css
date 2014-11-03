@@ -1,0 +1,2 @@
+label.error{float:left; color:red;}
+input.error, input.error:focus{border: 1px solid red;}
