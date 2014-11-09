@@ -24,4 +24,8 @@ class Controller{
 		else
 			return null;
 	}
+	
+	protected function redirect($action){
+		 wp_redirect(admin_url('admin.php?page='. $action. '&noheader=true'));
+	}
 }

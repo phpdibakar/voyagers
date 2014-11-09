@@ -37,7 +37,9 @@ register_deactivation_hook(__FILE__, "dc_slider_deactivation" );
 add_action('admin_menu','dc_register_slider_admin_interface');
 
 function dc_register_slider_admin_interface(){
-	add_menu_page('Dc Slider','Dc Slider','manage_options','dc-slider','dc_slider_manager');
+	if ( is_admin() ) {
+		add_menu_page('Dc Slider','Dc Slider','manage_options','dc-slider','dc_slider_manager');
+	}
 }
 
 function dc_slider_manager(){

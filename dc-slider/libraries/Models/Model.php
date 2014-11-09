@@ -33,13 +33,13 @@ class Model{
 	@param array fields
 	@param string
 	@throws Exception
-	@return var array
+	@return array
 	*/
 	public function listData(
 		$fields = array(),
 		$where_clause = null, 
-		$order_by = null, 
-		$order = 'ASC', 
+		$order_by = 'id', 
+		$order = 'DESC', 
 		$limit = null, 
 		$offset = 0
 	){
@@ -48,11 +48,58 @@ class Model{
 		
 		$fields = implode(',', $fields); 
 		
-		$results = $this->_wpdb->get_results("SELECT {$fields} FROM {$this->_table}");
+		$results = $this->_wpdb->get_results("SELECT {$fields} FROM {$this->_table} ORDER BY {$order_by} {$order}");
 		
 		//print '<pre>'; print_r($results); print '</pre>';exit;
 		
 		return $results;
 	
+	}
+	/* method to retrieve one row based on the conditional clause
+	@access public
+	@param string where
+	@return array
+	*/
+	public function getData($where){
+		return $this->_wpdb->get_row("SELECT * FROM {$this->_table} WHERE {$where}");
+	}
+	
+	/* method to count row based on the conditional clause
+	@access public
+	@param string where
+	@return array
+	*/
+	public function countData($where = null){
+		$query = is_null($where) ? "SELECT COUNT(id) FROM {$this->_table}" : 
+			"SELECT COUNT(id) FROM {$this->_table} WHERE {$where}";
+		
+		return $this->_wpdb->get_var($query);
+	}
+	
+	/* method to update fields based on the conditions
+	@access public
+	@param array data
+	@param array where
+	@throws Exception
+	@return bool 
+	*/
+	public function update(array $data, array $where){
+		if(!$this->_wpdb->update(
+			$this->_table,
+			$data,
+			$where
+		))
+			throw new Exception('Error updating records');
+		else
+			return true;
+	}
+	
+	/* method to delete row(s) on the conditions
+	@access public
+	@param array where
+	@return bool 
+	*/
+	public function delete(array $where){
+		return $this->_wpdb->delete($this->_table, $where);
 	}
 }
