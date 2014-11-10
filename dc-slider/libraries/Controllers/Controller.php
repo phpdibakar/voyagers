@@ -6,10 +6,10 @@ class Controller{
 	private $_mode;
 	
 	public function __construct($mode = 'admin'){
-		$this->_mode = $mode;
+		$this->setMode($mode);
 	}
 	
-	public function loadView($name, $vars, $return = false){
+	public function loadView($name, $vars = array(), $return = false){
 		//processing variables and creating them for view to use
 		foreach($vars as $var => $value){
 			$$var = $value;
@@ -27,5 +27,16 @@ class Controller{
 	
 	protected function redirect($action){
 		 wp_redirect(admin_url('admin.php?page='. $action. '&noheader=true'));
+	}
+	
+	protected function setMode($mode = 'admin'){
+		if($mode == 'admin' || $mode = 'frontend')
+			$this->_mode = $mode;
+		else
+			$this->_mode = 'admin';
+	}
+	
+	public function getMode(){
+		return $this->_mode;
 	}
 }

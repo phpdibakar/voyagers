@@ -21,6 +21,10 @@
 		<th scope="row"><label for="sub_title">Subtitle </label></th>
 		<td><input type="text" value="" id="sub_title" name="sub_title"></td>
 	</tr>
+	<tr class="form-field form-required">
+			<th scope="row"><label for="title">Display Order <span class="description">(required)</span></label></th>
+			<td><input type="text" value="" id="order" name="order"></td>
+	</tr>
 	<tr class="form-field">
 		<th scope="row"><label for="img"> Upload Image <span class="description">(required)</span></label></th>
 		<td><input type="file" value="" id="img" name="img"></td>
@@ -35,7 +39,8 @@
 	//wp_register_script( 'jquery.validate.min',, array( 'jquery' ), '3.0', false );
 	//wp_enqueue_script( 'jquery.validate.min' ); 
 ?>
-<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="<?php echo  plugins_url() . '/'. $this_plugin_dir .'/assets/js/jquery.validate.min.js'; ?>"> </script>
 <script>
 	$(document).ready(function(){
@@ -50,6 +55,10 @@
 				"img": {
 					required: true,
 				},
+				"order": {
+					required: true,
+					digits: true
+				},
 			},
 			
 			messages: {
@@ -61,6 +70,10 @@
 				},
 				"img": {
 					required: "Please select a valid image(.jpg, .png)",
+				},
+				"order": {
+					required: "Please enter display order",
+					digits: "Only digits are allowed",
 				},
 			},
 		});

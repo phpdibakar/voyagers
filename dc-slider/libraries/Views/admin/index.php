@@ -8,8 +8,9 @@
     <tr>
       <th width="10%" class="check-column"><input type="checkbox" id="snsf-all-checkboxes" /></th>
       <th width="10%">ID</th>
-      <th width="15%">Slide Name</th>
+      <th width="10%">Slide Name</th>
       <th width="15%">Caption</th>
+      <th width="5%">Order</th>
       <th width="5%">Status</th>
       <th width="15%">Created On</th>
       <th width="15%">Modified On</th>
@@ -24,6 +25,7 @@
 		<td><?php echo $slider->id; ?></td>
 		<td><?php echo $slider->name; ?></td>
 		<td><?php echo $slider->title; ?></td>
+		<td><?php echo $slider->order; ?></td>
 		<td>
 			<?php 
 				$link = admin_url('admin.php?page='. $slug). '&action=active&id=' . $slider->id. '&status=';
@@ -61,6 +63,7 @@
       <th >ID</th>
       <th >Slide Name</th>
       <th >Caption</th>
+	  <th >Order</th>
       <th >Status</th>
       <th >Created On</th>
       <th >Modified On</th>

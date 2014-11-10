@@ -2,8 +2,8 @@
 class Model{
 	protected $_table = null;
 	
-	private $_wpdb = stdClass;
-	private $_dbPrefix = null;
+	private $_wpdb,
+		$_dbPrefix = null;
 	
 	public function __construct($tableName){
 		global $wpdb;
@@ -37,7 +37,7 @@ class Model{
 	*/
 	public function listData(
 		$fields = array(),
-		$where_clause = null, 
+		$where_clause = 1, 
 		$order_by = 'id', 
 		$order = 'DESC', 
 		$limit = null, 
@@ -48,7 +48,7 @@ class Model{
 		
 		$fields = implode(',', $fields); 
 		
-		$results = $this->_wpdb->get_results("SELECT {$fields} FROM {$this->_table} ORDER BY {$order_by} {$order}");
+		$results = $this->_wpdb->get_results("SELECT {$fields} FROM {$this->_table} WHERE {$where_clause} ORDER BY `{$order_by}` {$order}");
 		
 		//print '<pre>'; print_r($results); print '</pre>';exit;
 		

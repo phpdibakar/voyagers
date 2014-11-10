@@ -9,13 +9,13 @@ Class Slider extends Controller{
 	const pluginSlug = 'dc-slider';
 	
 	protected $_data = array();
-	private $_model = stdClass;
-	private $_baseDir;
-	private $_allowedMIME = array('image/jpeg', 'image/png', 'image/gif'); 
+	private $_model,
+		$_baseDir,
+		$_allowedMIME = array('image/jpeg', 'image/png', 'image/gif'); 
 	
 	
-	public function __construct($baseDir, $baseUrl = null){
-		parent::__construct();
+	public function __construct($baseDir, $mode = 'admin'){
+		parent::__construct($mode);
 		
 		//assigning base path
 		$this->_baseDir = $baseDir;
@@ -36,9 +36,15 @@ Class Slider extends Controller{
 		$action = $this->getRequest();
 		if(!empty($action)){
 			$this->$action();
-		}else
-			$this->admin_index();
-			
+		}else{
+			$mode = $this->getMode();
+			$mode == 'admin' ? $this->admin_index() : $this->index();
+		}
+	}
+	
+	public function index(){
+		$sliders = $this->_model->listData(array('*'), 'active = 1', 'order', 'desc');
+		$this->loadView('index', array_merge($this->_data, array('slug' => self::pluginSlug, 'sliders' => $sliders)));
 	}
 	
 	public function admin_index(){
@@ -55,6 +61,7 @@ Class Slider extends Controller{
 							'title' => isset($_POST['title']) ? $_POST['title'] : null,
 							'sub_title' => isset($_POST['sub_title']) ? $_POST['sub_title'] : null,
 							'img' => $filename,
+							'order' => isset($_POST['order']) ? $_POST['order'] : 0,
 							'created_on' => date('Y-m-d H:i:s'),
 						)
 				);
@@ -74,6 +81,7 @@ Class Slider extends Controller{
 				'name' => $_POST['name'] ,
 				'title' => isset($_POST['title']) ? $_POST['title'] : null,
 				'sub_title' => isset($_POST['sub_title']) ? $_POST['sub_title'] : null,
+				'order' => isset($_POST['order']) ? $_POST['order'] : 0,
 				'modified_on' => date('Y-m-d H:i:s'),
 			);
 			$this->_data['flash'] = '';
@@ -145,8 +153,18 @@ Class Slider extends Controller{
 		}
 	}
 	
+	public function admin_view(){
+		$item_id = (isset($_GET['id']) && is_numeric($_GET['id'])) ? $_GET['id'] : 0;
+		
+		if($this->_model->countData("id = '{$item_id}'")){
+			$this->_data['row'] = $this->_model->getData("id = '{$item_id}'");
+		}else
+			$this->_data['flash'] = "The requested item could not be found!";	
+		
+		$this->loadView('view', $this->_data);
+	}
 	private function _uploadImage(){
-		if(isset($_FILES['img']['name']) && $_FILES['img']['error'] == UPLOAD_ERROR_OK){
+		if(isset($_FILES['img']['name']) && $_FILES['img']['error'] == UPLOAD_ERR_OK){
 				if(in_array($_FILES['img']['type'], $this->_allowedMIME)){
 					$filename = time(). '_'. $_FILES['img']['name'];
 					if(move_uploaded_file(

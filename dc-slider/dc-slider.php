@@ -14,9 +14,14 @@ function dc_slider_activation(){
 
 	$sql = "CREATE TABLE IF NOT EXISTS ". $wpdb->prefix. "dc_slider(
 		id INT(11) NOT NULL AUTO_INCREMENT,
+		name VARCHAR(100) NOT NULL,
 		title VARCHAR(100) NOT NULL,
 		sub_title VARCHAR(255) NULL,
 		img VARCHAR(255) NOT NULL,
+		order SMALLINT(3) DEFAULT 0,
+		active TINYINT(1) DEFAULT 1,
+		created_on DATETIME NOT NULL,
+		modified_on DATETIME NULL,
 		PRIMARY KEY(id)
 		)ENGINE=MYISAM;";
 	
@@ -36,6 +41,8 @@ register_deactivation_hook(__FILE__, "dc_slider_deactivation" );
 
 add_action('admin_menu','dc_register_slider_admin_interface');
 
+add_shortcode('dc-slider', 'dc_slider_display_frontend');
+
 function dc_register_slider_admin_interface(){
 	if ( is_admin() ) {
 		add_menu_page('Dc Slider','Dc Slider','manage_options','dc-slider','dc_slider_manager');
@@ -49,5 +56,11 @@ function dc_slider_manager(){
 	require_once 'libraries/Slider.php';
 	$basedir = dirname( __FILE__ );
 	new Slider($basedir);
+}
+
+function dc_slider_display_frontend(){
+	require_once 'libraries/Slider.php';
+	$basedir = dirname( __FILE__ );
+	new Slider($basedir, 'frontend');
 }
 ?>

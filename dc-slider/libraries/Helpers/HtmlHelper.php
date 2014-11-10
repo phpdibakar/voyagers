@@ -14,4 +14,8 @@ class HtmlHelper{
 		$link .= "> {$content} </a>";
 		return $link;
 	}
+	
+	public static function resizeWithPHPThumb($phpThumbDir, $image, $width, $height, $alt, $title = '', $zc = 1){
+		return "<img src=\"{$phpThumbDir}/phpThumb.php?src={$image}&w={$width}&h={$height}&zc={$zc}\" alt=\"{$alt}\" width=\"{$width}\" height=\"{$height}\" title=\"{$title}\" />";
+	}
 }
